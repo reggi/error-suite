@@ -1,6 +1,5 @@
 import ExtendableError from 'es6-error'
 import { get, keys, mapValues, zipObject, map } from 'lodash'
-// import locales from '../src/locales'
 import stringTemplate from 'string-template'
 
 export default class LangError extends ExtendableError {
