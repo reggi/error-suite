@@ -50,6 +50,16 @@ describe('MultiError', () => {
   })
 })
 
+const EXAMPLE_JSON = {
+  'name': 'LangError',
+  'message': 'invalid_name',
+  'messages': {
+    en: 'Invalid Name: Thomas!',
+    de: 'Ungültiger Name: Thomas!',
+    es: 'Nombre no válido: Thomas!'
+  }
+}
+
 describe('LangError', () => {
   it('should work', () => {
     let langerror = new LangError('invalid_name', { name: 'Thomas' }, {locales, nestedLocalesProp: 'login_errors'})
@@ -75,6 +85,22 @@ describe('LangError', () => {
     assert.deepEqual(langerror.messages, { en: 'Invalid Name: Thomas!', de: 'Ungültiger Name: Thomas!', es: 'Nombre no válido: Thomas!' })
     assert.equal(langerror.message, 'Ungültiger Name: Thomas!')
   })
+  it('should use create LangError from JSON', () => {
+    let err = new LangError().fromJSON(EXAMPLE_JSON)
+    assert.deepEqual(err.messages, { en: 'Invalid Name: Thomas!', de: 'Ungültiger Name: Thomas!', es: 'Nombre no válido: Thomas!' })
+  })
+  it('should use convert LangError to JSON', () => {
+    let err = new LangError('invalid_name', { name: 'Thomas' }, {locales, nestedLocalesProp: 'login_errors' })
+    let json = err.toJSON()
+    assert.deepEqual(json, EXAMPLE_JSON)
+  })
+  it('should create LangError from JSON from LangError', () => {
+    let err = new LangError('invalid_name', { name: 'Thomas' }, {locales, nestedLocalesProp: 'login_errors' })
+    let newErr = new LangError().fromJSON(err.toJSON())
+    assert.deepEqual(newErr.toJSON(), EXAMPLE_JSON)
+    assert.deepEqual(newErr.messages, EXAMPLE_JSON.messages)
+  })
+
 })
 
 describe('MultiError & LangError', () => {

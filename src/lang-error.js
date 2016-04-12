@@ -3,9 +3,9 @@ import { get, keys, mapValues, zipObject, map } from 'lodash'
 import stringTemplate from 'string-template'
 
 export default class LangError extends ExtendableError {
-  constructor(code, props, {locales, nestedLocalesProp, defaultAsErrorMessage, defaultLocale = 'en'}) {
+  constructor(code = null, props = {}, {locales = null, nestedLocalesProp = null, defaultAsErrorMessage = false, defaultLocale = 'en'} = {}) {
     let message = false
-    if (defaultAsErrorMessage) {
+    if (defaultAsErrorMessage && locales) {
       let defaultLocaleLocation = get(locales, `${defaultLocale}.${nestedLocalesProp}`) || get(locales, `${defaultLocale}`) || false
       if (!defaultLocaleLocation) throw new Error('no locale found')
       let rawDefaultMessage = get(defaultLocaleLocation, code)
@@ -17,21 +17,14 @@ export default class LangError extends ExtendableError {
     this.nestedLocalesProp = nestedLocalesProp
     this.code = code
     this.props = props
+    this._messages = {}
+    this.messagesFromRaw = true
     return this
   }
   get localesAvailable() {
-    return this.getLocalesAvailable()
-  }
-  get rawMessages() {
-    return this.getRawMessages()
-  }
-  get messages() {
-    return this.getMessages()
-  }
-  getLocalesAvailable() {
     return keys(this.locales)
   }
-  getRawMessages() {
+  get rawMessages() {
     let localeKeys = zipObject(this.localesAvailable, this.localesAvailable)
     return mapValues(localeKeys, locale => {
       let found = get(this.locales, `${locale}.${this.nestedLocalesProp}.${this.code}`)
@@ -43,9 +36,38 @@ export default class LangError extends ExtendableError {
       return false
     })
   }
-  getMessages() {
+  get messages() {
+    if (this.messagesFromRaw) {
+      this._messages = this.getMessagesFromRaw()
+    } else {
+      this._messages = this.getMessagesFromJson()
+    }
+    return this._messages
+  }
+  set messages(value) {
+    this._messages = value
+    return this._messages
+  }
+  getMessagesFromRaw() {
     return mapValues(this.rawMessages, message => {
       return stringTemplate(message, this.props)
     })
+  }
+  getMessagesFromJson() {
+    return this.jsonMessages
+  }
+  toJSON () {
+    return {
+      'name': 'LangError',
+      'message': this.message,
+      'messages': this.messages
+    }
+  }
+  fromJSON (data) {
+    this.messagesFromRaw = false
+    this.jsonMessages = data.messages
+    this.message = data.message
+    this.messages = data.messages
+    return this
   }
 }
