@@ -50,4 +50,9 @@ export default class MultiError extends ExtendableError {
     this.updateMessage()
     return this
   }
+  pushAll(arr) {
+    arr.forEach(item => {
+      this.push(item)
+    })
+  }
 }
