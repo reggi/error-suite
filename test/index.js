@@ -100,6 +100,14 @@ describe('LangError', () => {
     assert.deepEqual(newErr.toJSON(), EXAMPLE_JSON)
     assert.deepEqual(newErr.messages, EXAMPLE_JSON.messages)
   })
+  it('should update props', () => {
+    let langerror = new LangError('invalid_name', {}, {locales, nestedLocalesProp: 'login_errors' })
+    assert.deepEqual(langerror.localesAvailable, ['en', 'de', 'es'])
+    assert.deepEqual(langerror.rawMessages, { en: 'Invalid Name: {name}!', de: 'Ungültiger Name: {name}!', es: 'Nombre no válido: {name}!' })
+    langerror.updateProps({ name: 'Thomas' })
+    assert.deepEqual(langerror.messages, { en: 'Invalid Name: Thomas!', de: 'Ungültiger Name: Thomas!', es: 'Nombre no válido: Thomas!' })
+    assert.equal(langerror.message, 'invalid_name')
+  })
 
 })
 

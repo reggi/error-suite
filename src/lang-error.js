@@ -63,6 +63,9 @@ export default class LangError extends ExtendableError {
       'messages': this.messages
     }
   }
+  updateProps(props) {
+    Object.assign(this.props, props)
+  }
   fromJSON (data) {
     this.messagesFromRaw = false
     this.jsonMessages = data.messages
