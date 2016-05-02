@@ -3,7 +3,7 @@ import { get, keys, mapValues, zipObject, map } from 'lodash'
 import stringTemplate from 'string-template'
 
 export default class LangError extends ExtendableError {
-  constructor(code = null, props = {}, {locales = null, nestedLocalesProp = null, defaultAsErrorMessage = false, defaultLocale = 'en'} = {}) {
+  constructor(code = null, props = {}, {locales = {}, nestedLocalesProp = null, defaultAsErrorMessage = false, defaultLocale = 'en'} = {}) {
     let message = false
     if (defaultAsErrorMessage && locales) {
       let defaultLocaleLocation = get(locales, `${defaultLocale}.${nestedLocalesProp}`) || get(locales, `${defaultLocale}`) || false
