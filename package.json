@@ -1,6 +1,6 @@
 {
   "name": "error-suite",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Custom Error Objects for Language and Multiple Errors",
   "main": "./lib/index.js",
   "esnext": "./src/index.js",
