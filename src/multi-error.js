@@ -1,4 +1,4 @@
-import ExtendableError from 'es6-error'
+import ExtendableError from 'reggi-es6-error'
 import { map, get } from 'lodash'
 
 export default class MultiError extends ExtendableError {

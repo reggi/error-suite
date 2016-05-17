@@ -1,7 +1,7 @@
 {
   "name": "error-suite",
   "version": "1.0.7",
-  "description": "```js import MultiError from 'error-suite'",
+  "description": "Custom Error Objects for Language and Multiple Errors",
   "main": "./lib/index.js",
   "esnext": "./src/index.js",
   "directories": {
@@ -27,8 +27,8 @@
     ]
   },
   "dependencies": {
-    "es6-error": "^2.1.1",
     "lodash": "^4.7.0",
+    "reggi-es6-error": "^1.0.1",
     "string-template": "^1.0.0"
   }
 }
